@@ -1,0 +1,177 @@
+#N canvas 83 42 922 792 10;
+#X obj 33 105 gemhead;
+#X obj 33 196 separator;
+#X obj 33 135 t a b;
+#X obj 33 281 t a b b;
+#X obj 33 165 repeat 32;
+#X obj 140 337 f 0;
+#X obj 166 337 + 1;
+#X obj 142 451 * -1;
+#X obj 209 485 pack 0 0;
+#X obj 142 483 pack 0 0;
+#X obj 142 360 t f f;
+#X obj 185 428 / 32;
+#X floatatom 369 190 5 0 0 0 zoom - -;
+#X floatatom 372 82 5 0 0 0 length - -;
+#X msg 629 103 0 \, destroy;
+#X obj 629 150 gemwin;
+#X msg 629 77 reset \, create \, 1;
+#X obj 566 331 osc~ 400;
+#X msg 723 479 bang;
+#X obj 623 452 -~ 0.1;
+#X obj 645 334 noise~;
+#X obj 715 333 phasor~ 400;
+#X msg 209 513 \$2 \$1 0;
+#X msg 142 515 \$2 \$1 0;
+#X msg 114 168 0;
+#X obj 33 370 translateXYZ;
+#X floatatom 371 330 5 0 0 0 translate - -;
+#X obj 33 243 rotateXYZ;
+#X floatatom 370 301 5 0 0 0 rotate - -;
+#X obj 723 440 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 33 465 colorRGB 0 0.5 1;
+#X obj 723 459 metro 85;
+#X obj 33 68 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+;
+#X floatatom 566 307 5 0 0 0 - - -;
+#N canvas 517 364 470 320 test 0;
+#X obj 31 123 GEMglBegin;
+#X obj 86 100 GLdefine GL_LINE_STRIP;
+#X obj 31 13 inlet;
+#X obj 86 77 loadbang;
+#X obj 159 13 inlet;
+#X obj 221 12 inlet;
+#X obj 31 200 GEMglEnd;
+#X obj 31 151 GEMglVertex3fv;
+#X obj 31 175 GEMglVertex3fv;
+#X obj 64 52 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X connect 0 0 7 0;
+#X connect 1 0 0 1;
+#X connect 2 0 0 0;
+#X connect 3 0 1 0;
+#X connect 4 0 7 1;
+#X connect 5 0 8 1;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 9 0 1 0;
+#X restore 33 564 pd test;
+#X obj 142 426 * 4;
+#X text 102 564 can use [curve 2] in its place this is more cpu efficient.
+;
+#X obj 623 511 tabwrite~ waves;
+#X floatatom 368 135 5 0 0 0 width - -;
+#X obj 185 451 +;
+#X obj 252 456 +;
+#X floatatom 370 247 5 0 0 0 x_position - -;
+#X floatatom 715 307 5 0 0 0 - - -;
+#X obj 567 403 spigot~;
+#X obj 604 376 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 645 404 spigot~;
+#X obj 682 379 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 716 404 spigot~;
+#X obj 753 380 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X msg 810 597 \; pd dsp 1;
+#X text 825 634 ON;
+#X msg 811 656 \; pd dsp 0;
+#X text 831 693 OFF;
+#X obj 833 329 loadbang;
+#N canvas 0 22 450 300 (subpatch) 0;
+#X array waves 100 float 1;
+#A 0 -0.350213 0.348111 0.399415 -0.0712194 0.854762 -0.885649 -0.998759
+0.204822 -0.215191 -0.0377381 -0.946145 -0.358433 0.837038 -0.627214
+0.0820521 -0.229993 -1.01966 -0.358193 -0.997282 0.678261 0.770995
+-0.0104773 -0.109546 -0.629047 0.868329 0.169826 -0.756802 0.628585
+0.0503098 0.579673 0.747857 0.366913 0.729183 0.868463 -0.454075 -0.503677
+-0.032903 -0.952589 -0.000889368 0.281202 -0.00827074 -0.901076 -1.04504
+-0.80068 0.211908 -0.914025 0.512501 0.301199 0.73324 -0.238522 0.287823
+-0.930512 -0.626268 -0.322336 -0.820249 0.778343 0.179422 0.795456
+0.635443 -0.647203 -0.560003 0.593841 -0.583978 0.728137 -0.795578
+0.679251 -0.137797 0.709281 0.296565 -0.105069 -0.340086 -0.669852
+0.830822 -0.0696807 -0.894078 -0.286963 0.227739 -0.56958 -0.126539
+-0.571998 0.729643 0.605179 -0.722146 0.352225 0.416259 0.338859 0.0421377
+-0.970609 -0.279658 -0.200587 -0.437309 -0.470935 -0.5567 0.54786 0.674855
+0.806067 0.270817 -0.852338 -0.0814365 0.559843;
+#X coords 0 1 99 -1 200 140 1;
+#X restore 586 575 graph;
+#X text 720 424 turn tabwrite on;
+#X text 111 14 Waveform Generator;
+#X text 632 46 open/close Gem;
+#X obj 142 381 tabread waves;
+#X obj 513 116 loadbang;
+#X msg 370 226 -4;
+#X msg 369 165 31;
+#X text 19 36 (replace tabread waves with any array for output.);
+#X msg 372 55 248;
+#X msg 368 110 1;
+#X text 330 27 ----Adjust Below---;
+#X text 609 266 ---Choose Waveform Below---;
+#X text 228 381 <--Waveform To Draw;
+#X text 55 67 <-Start Drawing Waveform;
+#X connect 0 0 2 0;
+#X connect 1 0 27 0;
+#X connect 2 0 4 0;
+#X connect 2 1 24 0;
+#X connect 3 0 25 0;
+#X connect 3 2 5 0;
+#X connect 4 0 1 0;
+#X connect 5 0 6 0;
+#X connect 5 0 10 0;
+#X connect 6 0 5 1;
+#X connect 7 0 9 0;
+#X connect 8 0 22 0;
+#X connect 9 0 23 0;
+#X connect 10 0 58 0;
+#X connect 10 1 11 0;
+#X connect 11 0 40 0;
+#X connect 11 0 39 0;
+#X connect 12 0 11 1;
+#X connect 13 0 4 1;
+#X connect 14 0 15 0;
+#X connect 16 0 15 0;
+#X connect 17 0 43 0;
+#X connect 18 0 37 0;
+#X connect 19 0 37 0;
+#X connect 20 0 45 0;
+#X connect 21 0 47 0;
+#X connect 22 0 34 2;
+#X connect 23 0 34 1;
+#X connect 24 0 5 1;
+#X connect 25 0 30 0;
+#X connect 26 0 25 1;
+#X connect 27 0 3 0;
+#X connect 28 0 27 3;
+#X connect 29 0 31 0;
+#X connect 30 0 34 0;
+#X connect 31 0 18 0;
+#X connect 32 0 0 0;
+#X connect 33 0 17 0;
+#X connect 35 0 7 0;
+#X connect 35 0 8 0;
+#X connect 38 0 35 1;
+#X connect 39 0 9 1;
+#X connect 40 0 8 1;
+#X connect 41 0 40 1;
+#X connect 41 0 39 1;
+#X connect 42 0 21 0;
+#X connect 43 0 19 0;
+#X connect 44 0 43 1;
+#X connect 45 0 19 0;
+#X connect 46 0 45 1;
+#X connect 47 0 19 0;
+#X connect 48 0 47 1;
+#X connect 53 0 44 0;
+#X connect 53 0 48 0;
+#X connect 58 0 35 0;
+#X connect 59 0 60 0;
+#X connect 59 0 61 0;
+#X connect 59 0 63 0;
+#X connect 59 0 64 0;
+#X connect 60 0 41 0;
+#X connect 61 0 12 0;
+#X connect 63 0 13 0;
+#X connect 64 0 38 0;
