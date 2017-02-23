@@ -44,25 +44,26 @@ SynthDef(\combpipe, {
 	q=1,
 	dry=0,
 	c=1.414;
-	var freq1=base,
-	freq2=base+1*seperation,
-	freq3=base+2*seperation,
-	freq4=base+3*seperation,
-	freq5=base+4*seperation,
-	freq6=base+5*seperation,
-	freq7=base+6*seperation,
-	freq8=base+7*seperation,
+	var
+	dfreq1=1.0/(base),
+	dfreq2=1.0/(1*seperation+base),
+	dfreq3=1.0/(2*seperation+base),
+	dfreq4=1.0/(3*seperation+base),
+	dfreq5=1.0/(4*seperation+base),
+	dfreq6=1.0/(5*seperation+base),
+	dfreq7=1.0/(6*seperation+base),
+	dfreq8=1.0/(7*seperation+base),
 	ina=In.ar(in);
 	Out.ar(out,
 			(amp*(
-				BPF.ar(ina,freq1,q) +
-				BPF.ar(ina,freq2,q) +
-				BPF.ar(ina,freq3,q) +
-				BPF.ar(ina,freq4,q) +
-				BPF.ar(ina,freq5,q) +
-				BPF.ar(ina,freq6,q) +
-				BPF.ar(ina,freq7,q) +
-				BPF.ar(ina,freq8,q)
+				CombC.ar(ina,delaytime:dfreq1) +
+				CombC.ar(ina,delaytime:dfreq2) +
+				CombC.ar(ina,delaytime:dfreq3) +
+				CombC.ar(ina,delaytime:dfreq4) +
+				CombC.ar(ina,delaytime:dfreq5) +
+				CombC.ar(ina,delaytime:dfreq6) +
+				CombC.ar(ina,delaytime:dfreq7) +
+				CombC.ar(ina,delaytime:dfreq8)
 			))/8.0
 	)	
 }).load(s)
@@ -104,7 +105,7 @@ SynthDef(\simpledijj, {
 // 
 
 SynthDef(\dijj, {
-	arg out=0, freq=80, a=0.5,amp=0.5,noise=0.1,modfreq=1;
+	arg out=0, freq=80, a=0.5,amp=0.5,noise=0.1,modfreq=10;
 	var ka = a, //(1+LFBrownNoise2.kr(freq:modfreq, mul:noise))*a,
 	    kfreq = freq*(1+LFBrownNoise2.kr(freq:modfreq,mul:noise)),
 	    numerator   = (1.0 - ka)**2,
@@ -115,12 +116,17 @@ SynthDef(\dijj, {
 }).load(s);
 
 
-b = Bus.audio(s,1);
-p = Synth(\pipe,[out: 0,in: b, amp: 0.9, base: 44.0, seperation: 44.0, noise: 0.1,q:0.5]);
+~b = Bus.audio(s,1);
+~b2 = Bus.audio(s,1);
+p = Synth(\combpipe,[out: 0,in: ~b2, amp: 0.9, base: 44.0, seperation: 20.0, noise: 0.1,q:0.5]);
+~p2 = Synth(\pipe,[out: ~b2,in: ~b, amp: 0.9, base: 44.0, seperation: 88.0, noise: 0.1,q:0.5]);
+
 // p = Synth(\busplay,[out: 0, in: b, amp:1.0]);
-t = Synth(\dijj,[out: b, freq: 120, a: 0.5, amp:2.0]);
+t = Synth(\dijj,[out: ~b, freq: 240, a: 0.5, amp:5.0]);
 bt.set(\noise,0.0001)
 s.freqscope
 s.scope
 
+p.autogui
+~p2.autogui
 // { CombL.ar(WhiteNoise.ar(0.01), 0.01, 0.01, 0.2) }.play;
