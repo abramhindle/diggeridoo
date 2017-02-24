@@ -102,9 +102,26 @@ SynthDef(\simpledijj, {
 // dijj(f, a, t) = \frac{(1-a)^2}{((1 +
 // a sin(2 \pi f t))^2)}
 // \end{equation}
-// 
+//
+
+// What is the range of spitC and splitL
 
 SynthDef(\dijj, {
+	arg out=0, freq=80, a=0.5,amp=0.5,noise=0.001,modfreq=10,spitL=0;
+	var ilfo = LeakDC.kr(LFBrownNoise2.kr(freq:freq/100) + LFBrownNoise2.kr(freq:freq/10)),
+	    ka = ((ilfo * ((-1) * noise)) + a),
+	    ff = freq + ilfo,
+	    kfreq = ff,
+	    numerator   = (1.0 - ka)**2,
+	    denominator = (1.0 + (ka * SinOsc.ar(kfreq)))**2,
+	    spitC = BrownNoise.ar(mul:0.1) * spitL,
+	    dijjForm = HPF.ar(amp * numerator / denominator, freq);
+	Out.ar(out,
+			LPF.ar((spitC * dijjForm) + dijjForm, 4000)
+	);	    
+}).load(s);
+
+SynthDef(\dijj2, {
 	arg out=0, freq=80, a=0.5,amp=0.5,noise=0.1,modfreq=10;
 	var ka = a, //(1+LFBrownNoise2.kr(freq:modfreq, mul:noise))*a,
 	    kfreq = freq*(1+LFBrownNoise2.kr(freq:modfreq,mul:noise)),
@@ -118,11 +135,15 @@ SynthDef(\dijj, {
 
 ~b = Bus.audio(s,1);
 ~b2 = Bus.audio(s,1);
-p = Synth(\combpipe,[out: 0,in: ~b2, amp: 0.9, base: 44.0, seperation: 20.0, noise: 0.1,q:0.5]);
+p = Synth(\combpipe,[out: 0,in: ~b2, amp: 0.9, base: 44.0, seperation: 44.0, noise: 0.1,q:0.5]);
 ~p2 = Synth(\pipe,[out: ~b2,in: ~b, amp: 0.9, base: 44.0, seperation: 88.0, noise: 0.1,q:0.5]);
 
 // p = Synth(\busplay,[out: 0, in: b, amp:1.0]);
-t = Synth(\dijj,[out: ~b, freq: 240, a: 0.5, amp:5.0]);
+t = Synth(\dijj,[out: ~b, freq: 240, a: 0.5, amp:5.0, noise:0.02]);
+t.set(\freq, 45.0*4.0)
+t.set(\spitL, 0.3)
+t.set(\noise,0.1)
+t.set(\a,1.0 - (1.0.linrand))
 bt.set(\noise,0.0001)
 s.freqscope
 s.scope
